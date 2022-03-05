@@ -26,14 +26,35 @@ function App() {
   const onDragEnd = ({ draggableId, destination, source }: DropResult) => {
     if (!destination) return;
 
-    /*
-    setToDos((currentToDos) => {
-      const tempToDos = [...currentToDos];
-      tempToDos.splice(source.index, 1);
-      tempToDos.splice(destination?.index, 0, draggableId);
-      return tempToDos;
-    });
-    */
+    if (destination?.droppableId === source.droppableId) {
+      setToDos((allBoards) => {
+        const tempToDos = [...allBoards[source.droppableId]];
+
+        tempToDos.splice(source.index, 1);
+        tempToDos.splice(destination?.index, 0, draggableId);
+
+        return {
+          ...allBoards,
+          [source.droppableId]: tempToDos,
+        };
+      });
+    }
+
+    if (destination?.droppableId !== source.droppableId) {
+      setToDos((allBoards) => {
+        const sourceBoard = [...allBoards[source.droppableId]];
+        const destinationBoard = [...allBoards[destination.droppableId]];
+
+        sourceBoard.splice(source.index, 1);
+        destinationBoard.splice(destination?.index, 0, draggableId);
+
+        return {
+          ...allBoards,
+          [source.droppableId]: sourceBoard,
+          [destination.droppableId]: destinationBoard,
+        };
+      });
+    }
   };
 
   return (
