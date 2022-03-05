@@ -47,10 +47,23 @@ const Area = styled.div<IAreaProps>`
   transition: background-color 0.1s ease-in;
 `;
 
+const FormWrapper = styled.div`
+  padding: 0 10px;
+`;
+
 const Form = styled.form`
   width: 100%;
   input {
     width: 100%;
+    background: none;
+    border: none;
+    border-bottom: 2px solid ${(props) => props.theme.bgColor};
+    &:focus {
+      outline: none;
+    }
+    &::placeholder {
+      color: rgba(0, 0, 0, 0.6);
+    }
   }
 `;
 
@@ -73,13 +86,15 @@ function Board({ toDos, boardId }: IBoardProps) {
   return (
     <Wrapper>
       <Title>{boardId}</Title>
-      <Form onSubmit={handleSubmit(onValid)}>
-        <input
-          {...register("toDo", { required: true })}
-          type="text"
-          placeholder={`Add task on ${boardId}`}
-        ></input>
-      </Form>
+      <FormWrapper>
+        <Form onSubmit={handleSubmit(onValid)}>
+          <input
+            {...register("toDo", { required: true })}
+            type="text"
+            placeholder={`Add task on ${boardId}`}
+          ></input>
+        </Form>
+      </FormWrapper>
       <Droppable droppableId={boardId}>
         {(provided, snapshot) => (
           <Area
