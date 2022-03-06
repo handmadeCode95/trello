@@ -12,6 +12,9 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const Input = styled.input`
@@ -34,7 +37,8 @@ interface IForm {
 
 function AddBoard() {
   const setToDos = useSetRecoilState(toDoState);
-  const { register, setValue, handleSubmit } = useForm<IForm>();
+  const { register, setValue, handleSubmit, setFocus } = useForm<IForm>();
+
   const onValid = ({ board }: IForm) => {
     setToDos((allBoards) => {
       return {
@@ -44,8 +48,11 @@ function AddBoard() {
     });
     setValue("board", "");
   };
+
+  const onClick = () => setFocus("board");
+
   return (
-    <Wrapper>
+    <Wrapper onClick={onClick}>
       <form onSubmit={handleSubmit(onValid)}>
         <Input
           {...register("board", { required: true })}
