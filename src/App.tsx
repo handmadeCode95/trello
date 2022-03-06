@@ -5,6 +5,7 @@ import { useRecoilState } from "recoil";
 import Board from "./Components/Board";
 import AddBoard from "./Components/AddBoard";
 import RemoveCard from "./Components/RemoveCard";
+import { useEffect } from "react";
 
 const Wrapper = styled.div`
   display: flex;
@@ -26,6 +27,7 @@ const Boards = styled.div`
 `;
 
 function App() {
+  const TODOS_KEY = "todos";
   const [toDos, setToDos] = useRecoilState(toDoState);
   const onDragEnd = ({ destination, source }: DropResult) => {
     if (!destination) return;
@@ -92,6 +94,17 @@ function App() {
       }
     }
   };
+
+  useEffect(() => {
+    const saveToDos = localStorage.getItem(TODOS_KEY);
+    if (saveToDos !== null) {
+      setToDos(JSON.parse(saveToDos));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(TODOS_KEY, JSON.stringify(toDos));
+  }, [toDos]);
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
