@@ -17,6 +17,22 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
+const Header = styled.header`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  img {
+    width: 70px;
+    margin-right: 10px;
+  }
+`;
+
+const Title = styled.h1`
+  font-size: 48px;
+  color: white;
+  font-weight: 600;
+`;
+
 const Boards = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -109,6 +125,10 @@ function App() {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
+        <Header>
+          <img src={`${process.env.PUBLIC_URL}/logo192.png`} />
+          <Title>To-Do Boards</Title>
+        </Header>
         <Droppable droppableId="Boards" direction="horizontal" type="BOARD">
           {(provided) => (
             <Boards ref={provided.innerRef} {...provided.droppableProps}>
