@@ -99,7 +99,8 @@ function Board({ toDos, boardId, index }: IBoardProps) {
               <input
                 {...register("toDo", { required: true })}
                 type="text"
-                placeholder={`Add task on ${boardId}`}
+                placeholder={`Add task on ${boardId.trim()}`}
+                maxLength={30}
               ></input>
             </Form>
           </FormWrapper>

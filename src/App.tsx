@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { toDoState } from "./atoms";
 import { useRecoilState } from "recoil";
 import Board from "./Components/Board";
+import AddBoard from "./Components/AddBoard";
 
 const Wrapper = styled.div`
   display: flex;
@@ -92,6 +93,7 @@ function App() {
                 />
               ))}
               {provided.placeholder}
+              <AddBoard />
             </Boards>
           )}
         </Droppable>
