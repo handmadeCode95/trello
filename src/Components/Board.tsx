@@ -4,6 +4,8 @@ import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { IToDo, toDoState } from "../atoms";
 import DraggableCard from "./DraggableCard";
+import { faX } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface IBoardProps {
   toDos: IToDo[];
@@ -46,7 +48,7 @@ const Area = styled.div<IAreaProps>`
       ? "#b2bec3"
       : "transparent"};
   flex-grow: 1;
-  transition: background-color 0.1s ease-in;
+  transition: background-color 0.2s ease-in;
 `;
 
 const FormWrapper = styled.div`
@@ -69,9 +71,28 @@ const Form = styled.form`
   }
 `;
 
+const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+`;
+
+const Remove = styled.button`
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  color: #c3141b;
+  background: white;
+  border: none;
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
 function Board({ toDos, boardId, index }: IBoardProps) {
   const setToDos = useSetRecoilState(toDoState);
   const { register, setValue, handleSubmit } = useForm<IForm>();
+
   const onValid = ({ toDo }: IForm) => {
     const newToDo = {
       id: Date.now(),
@@ -85,6 +106,21 @@ function Board({ toDos, boardId, index }: IBoardProps) {
     });
     setValue("toDo", "");
   };
+
+  const onClick = () => {
+    setToDos((allBoards) => {
+      const boardList = Object.keys(allBoards);
+
+      boardList.splice(index, 1);
+
+      let newBoards = {};
+      boardList.map((board) => {
+        newBoards = { ...newBoards, [board]: allBoards[board] };
+      });
+
+      return newBoards;
+    });
+  };
   return (
     <Draggable key={boardId} draggableId={boardId} index={index}>
       {(provided) => (
@@ -93,7 +129,13 @@ function Board({ toDos, boardId, index }: IBoardProps) {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <Title>{boardId}</Title>
+          <Header>
+            <Title>{boardId}</Title>
+            <Remove onClick={onClick}>
+              <FontAwesomeIcon icon={faX} size={"sm"} />
+            </Remove>
+          </Header>
+
           <FormWrapper>
             <Form onSubmit={handleSubmit(onValid)}>
               <input
@@ -104,6 +146,7 @@ function Board({ toDos, boardId, index }: IBoardProps) {
               ></input>
             </Form>
           </FormWrapper>
+
           <Droppable droppableId={boardId} type="CARD">
             {(cardProvided, snapshot) => (
               <Area

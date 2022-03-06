@@ -4,12 +4,14 @@ import { toDoState } from "./atoms";
 import { useRecoilState } from "recoil";
 import Board from "./Components/Board";
 import AddBoard from "./Components/AddBoard";
+import RemoveCard from "./Components/RemoveCard";
 
 const Wrapper = styled.div`
   display: flex;
   width: 100%;
   height: 100vh;
   margin: 0 auto;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
@@ -44,36 +46,49 @@ function App() {
         return newBoards;
       });
     } else {
-      if (destination?.droppableId === source.droppableId) {
+      if (destination?.droppableId === "cardRemove") {
         setToDos((allBoards) => {
           const tempToDos = [...allBoards[source.droppableId]];
-          const taskObj = tempToDos[source.index];
 
-          tempToDos.splice(source.index, 1);
-          tempToDos.splice(destination?.index, 0, taskObj);
+          tempToDos.splice(source?.index, 1);
 
           return {
             ...allBoards,
-            [source.droppableId]: tempToDos,
+            [source?.droppableId]: tempToDos,
           };
         });
-      }
+      } else {
+        if (destination?.droppableId === source.droppableId) {
+          setToDos((allBoards) => {
+            const tempToDos = [...allBoards[source.droppableId]];
+            const taskObj = tempToDos[source.index];
 
-      if (destination?.droppableId !== source.droppableId) {
-        setToDos((allBoards) => {
-          const sourceBoard = [...allBoards[source.droppableId]];
-          const taskObj = sourceBoard[source.index];
-          const destinationBoard = [...allBoards[destination.droppableId]];
+            tempToDos.splice(source.index, 1);
+            tempToDos.splice(destination?.index, 0, taskObj);
 
-          sourceBoard.splice(source.index, 1);
-          destinationBoard.splice(destination?.index, 0, taskObj);
+            return {
+              ...allBoards,
+              [source.droppableId]: tempToDos,
+            };
+          });
+        }
 
-          return {
-            ...allBoards,
-            [source.droppableId]: sourceBoard,
-            [destination.droppableId]: destinationBoard,
-          };
-        });
+        if (destination?.droppableId !== source.droppableId) {
+          setToDos((allBoards) => {
+            const sourceBoard = [...allBoards[source.droppableId]];
+            const taskObj = sourceBoard[source.index];
+            const destinationBoard = [...allBoards[destination.droppableId]];
+
+            sourceBoard.splice(source.index, 1);
+            destinationBoard.splice(destination?.index, 0, taskObj);
+
+            return {
+              ...allBoards,
+              [source.droppableId]: sourceBoard,
+              [destination.droppableId]: destinationBoard,
+            };
+          });
+        }
       }
     }
   };
@@ -97,6 +112,7 @@ function App() {
             </Boards>
           )}
         </Droppable>
+        <RemoveCard />
       </Wrapper>
     </DragDropContext>
   );
